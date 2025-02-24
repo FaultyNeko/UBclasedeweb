@@ -11,29 +11,12 @@
   
   <!-- Sidebar -->
   <nav id="sidebar">
-    <!-- Login Form -->
-    <div class="login-container">
-      <h3>Login</h3>
-      <form id="loginForm">
-        <div class="form-group">
-          <label for="login-username">Username:</label>
-          <input type="text" id="login-username" name="username" placeholder="Username" required>
-        </div>
-        <div class="form-group">
-          <label for="login-password">Password:</label>
-          <input type="password" id="login-password" name="password" placeholder="Password" required>
-        </div>
-        <button type="submit">Login</button>
-      </form>
-    </div>
-    
-    <!-- Google Link -->
     <ul>
       <li><a href="https://www.google.com" target="_blank">Google</a></li>
     </ul>
   </nav>
   <header>
-    <h1>Jimbobs fake mustache and hotel emporium</h1>
+    <h1>Hotel Reservations</h1>
   </header>
   <section class="rooms">
     <h2>Our Rooms</h2>
@@ -100,30 +83,6 @@
       </div>
     </form>
   </section>
-  <footer class="quick-footer">
-    <div class="search-container">
-      <!-- Google Search -->
-      <div class="search-box">
-        <img class="search-logo" src="clippy.jpg" alt="Google Logo">
-        <form action="https://www.google.com/search" method="GET">
-          <input type="text" name="q" placeholder="Search Google..." required>
-          <button type="submit">Search</button>
-        </form>
-      </div>
-      <!-- Wikipedia Search -->
-      <div class="search-box">
-        <img class="search-logo" src="wikipedia.png" alt="Wikipedia Logo">
-        <form action="https://en.wikipedia.org/w/index.php" method="GET">
-          <!-- Wikipedia requires a hidden title field -->
-          <input type="hidden" name="title" value="Special:Search">
-          <input type="text" name="search" placeholder="Search Wikipedia..." required>
-          <button type="submit">Search</button>
-        </form>
-      </div>
-    </div>
-  </footer>
-  
-  
   <script>
     // Initially hide the reservation form
     document.getElementById('reservationFormContainer').style.display = 'none';
@@ -144,7 +103,6 @@
 
     document.getElementById('sidebarToggle').addEventListener('click', function() {
       document.getElementById('sidebar').classList.toggle('active');
-      document.body.classList.toggle('active-sidebar');
     });
   </script>
 </body>

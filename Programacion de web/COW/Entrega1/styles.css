@@ -4,10 +4,11 @@ body
     font-family: "Comic Sans MS", "Comic Sans", cursive;
 }
 
+/* Sidebar styling */
 #sidebar {
   position: fixed;
   top: 0;
-  left: -200px; /* Hidden by default (adjust width as needed) */
+  left: -200px; /* Hidden by default */
   width: 200px;
   height: 100%;
   background-color: #f0f0f0;
@@ -16,12 +17,12 @@ body
   transition: left 0.3s ease;
 }
 
-/* When sidebar is active, slide it in */
+/* Slide the sidebar in when active */
 #sidebar.active {
   left: 0;
 }
 
-/* Toggle button styling */
+/* Toggle button styling remains unchanged */
 #sidebarToggle {
   position: fixed;
   top: 20px;
@@ -32,100 +33,153 @@ body
   padding: 10px;
   font-size: 20px;
   cursor: pointer;
-  z-index: 1000; /* Ensure it stays on top */
+  z-index: 1000;
+  transition: left 0.3s ease;
 }
 
-/* Optional: adjust your main content so it’s not obscured
-   when the sidebar is open. If you prefer overlay, you can skip this */
+/* Move the toggle button with the sidebar */
+body.active-sidebar #sidebarToggle {
+  left: 220px;
+}
+
+/* Optional: push main content aside when sidebar is open */
 body.active-sidebar {
   margin-left: 200px;
 }
 
+/* Login form styling within the sidebar */
+#sidebar .login-container {
+  margin-bottom: 20px;
+}
+
+#sidebar .login-container h3 {
+  margin-top: 0;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+#sidebar form {
+  display: flex;
+  flex-direction: column;
+}
+
+#sidebar .form-group {
+  margin-bottom: 10px;
+}
+
+#sidebar label {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+/* Updated snippet to ensure equal width */
+#sidebar input[type="text"],
+#sidebar input[type="password"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#sidebar button[type="submit"] {
+  padding: 8px;
+  background-color: #2d89ef;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#sidebar button[type="submit"]:hover {
+  background-color: #246bb1;
+}
 
 header {
     background-color: #2d89ef;
     color: #fff;
     padding: 20px;
     text-align: center;
-  }
+}
 
-  .rooms {
+.rooms {
     text-align: center;
     padding: 20px;
-  }
-  
-  .room-container {
+}
+
+.room-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
-  }
-  
-  figure.room {
+}
+
+figure.room {
     cursor: pointer;
     margin: 0;
     width: 250px;
     background: #fff;
     border: 2px solid #ccc;
     transition: border-color 0.3s, transform 0.3s;
-  }
-  
-  figure.room:hover {
+}
+
+figure.room:hover {
     border-color: #2d89ef;
     transform: scale(1.02);
-  }
-  
-  figure.room img {
+}
+
+figure.room img {
     width: 100%;
     height: auto;
     display: block;
-  }
-  
-  figcaption {
+}
+
+figcaption {
     padding: 10px;
     text-align: left;
-  }
-  
-  figcaption h3 {
+}
+
+figcaption h3 {
     margin: 0 0 5px 0;
     font-size: 1.2em;
-  }
-  
-  figcaption p {
+}
+
+figcaption p {
     margin: 3px 0;
     font-size: 0.9em;
     color: #555;
-  }
-  
-  .reservation-form {
+}
+
+.reservation-form {
     margin: 20px auto;
     padding: 20px;
     width: 80%;
     max-width: 600px;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  }
-  
-  .form-group {
+}
+
+.form-group {
     margin-bottom: 15px;
-  }
-  
-  label {
+}
+
+label {
     display: block;
     margin-bottom: 5px;
-  }
-  
-  input[type="text"],
-  input[type="email"],
-  input[type="date"],
-  select {
+}
+
+input[type="text"],
+input[type="email"],
+input[type="date"],
+select {
     width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
-  }
-  
-  button {
+}
+
+button {
     padding: 10px 20px;
     background-color: #2d89ef;
     border: none;
@@ -133,8 +187,65 @@ header {
     color: #fff;
     font-size: 16px;
     cursor: pointer;
-  }
-  
-  button:hover {
+}
+
+button:hover {
     background-color: #246bb1;
-  }
+}
+
+.quick-footer {
+  background-color: #2d89ef;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+  margin-top: 40px; /* Adjust spacing as needed */
+}
+
+/* Container to hold both search boxes side by side */
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+
+/* Individual search box styling */
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Style the form elements inside each search box */
+.search-box form {
+  display: inline-block;
+}
+
+.search-box input[type="text"] {
+  padding: 10px;
+  width: 200px; /* Adjust as needed */
+  border: none;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.search-box button {
+  padding: 10px 20px;
+  background-color: #fff;
+  color: #2d89ef;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-box button:hover {
+  background-color: #f0f0f0;
+}
+
+/* Set a consistent height for the logos */
+.search-logo {
+  height: 100px;
+  width: auto;
+}
