@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hotel Reservations</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <button id="sidebarToggle">☰</button>
+  
+  <!-- Sidebar -->
+  <nav id="sidebar">
+    <ul>
+      <li><a href="https://www.google.com" target="_blank">Google</a></li>
+    </ul>
+  </nav>
+  <header>
+    <h1>Hotel Reservations</h1>
+  </header>
+  <section class="rooms">
+    <h2>Our Rooms</h2>
+    <div class="room-container">
+      <figure class="room" onclick="displayBookingInfo('Single Room')">
+        <img src="room1.jpg" alt="Single Room">
+        <figcaption>
+          <h3>Single Room</h3>
+          <p>Price: Half your kidney and 1 lung</p>
+          <p>Type: Single</p>
+          <p>Place: That one house off in the background, yes that one</p>
+        </figcaption>
+      </figure>
+      <figure class="room" onclick="displayBookingInfo('Double Room')">
+        <img src="room2.jpg" alt="Double Room">
+        <figcaption>
+          <h3>Double Room</h3>
+          <p>Price: one half eaten hot dog</p>
+          <p>Type: Double</p>
+          <p>Place: Da pool</p>
+        </figcaption>
+      </figure>
+      <figure class="room" onclick="displayBookingInfo('Suite Room')">
+        <img src="room3.jpg" alt="Suite Room">
+        <figcaption>
+          <h3>Suite Room</h3>
+          <p>Price: Your soul >:D</p>
+          <p>Type: Suite</p>
+          <p>Place: :DDDDDDDDDDDDDDD</p>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+  <section class="reservation-form" id="reservationFormContainer">
+    <h2>Book Your Room</h2>
+    <form id="reservationForm">
+      <div class="form-group">
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" name="name" placeholder="Your full name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" name="email" placeholder="Your email" required>
+      </div>
+      <div class="form-group">
+        <label for="room-type">Room Type:</label>
+        <select id="room-type" name="room-type" required>
+          <option value="">Select a room type</option>
+          <option value="Single Room">Single Room</option>
+          <option value="Double Room">Double Room</option>
+          <option value="Suite Room">Suite Room</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="checkin">Check-In Date:</label>
+        <input type="date" id="checkin" name="checkin" required>
+      </div>
+      <div class="form-group">
+        <label for="checkout">Check-Out Date:</label>
+        <input type="date" id="checkout" name="checkout" required>
+      </div>
+      <div class="form-group">
+        <button type="submit">Book Now</button>
+      </div>
+    </form>
+  </section>
+  <script>
+    // Initially hide the reservation form
+    document.getElementById('reservationFormContainer').style.display = 'none';
+    
+    // Function to display booking info when a room image is clicked
+    function displayBookingInfo(roomType) {
+      // Show the form container
+      document.getElementById('reservationFormContainer').style.display = 'block';
+      // Optionally, set the room type in the form automatically:
+      document.getElementById('room-type').value = roomType;
+    }
+    
+    // Prevent form submission (since no backend is available)
+    document.getElementById('reservationForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      alert('Reservation form submitted! (Note: No backend processing is available.)');
+    });
+
+    document.getElementById('sidebarToggle').addEventListener('click', function() {
+      document.getElementById('sidebar').classList.toggle('active');
+    });
+  </script>
+</body>
+</html>
