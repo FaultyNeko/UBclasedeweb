@@ -1,4 +1,10 @@
 <?php
+// Check if a room type is passed via the query string (fallback for no-JS mode)
+$selectedRoom = "";
+if (isset($_GET['room'])) {
+    $selectedRoom = $_GET['room'];
+}
+
 $worldConn = new mysqli("localhost", "root", "", "world");
 if ($worldConn->connect_error) {
     die("Connection failed: " . $worldConn->connect_error);
@@ -23,13 +29,22 @@ $worldConn->close();
   <meta charset="UTF-8">
   <title>Hotel Reservations - With Login</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Bootstrap and custom styles -->
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="css/styles.css">
-
+  
   <!-- Load fallback CSS if JavaScript is disabled -->
   <noscript>
     <link rel="stylesheet" href="css/noscript.css">
   </noscript>
+  
+  <!-- Load Prototype and Scriptaculous first -->
+  <script src="https://ajax.googleapis.com/ajax/libs/prototype/1.7.3.0/prototype.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/scriptaculous/1.9.0/scriptaculous.js?load=effects"></script>
+  
+  <!-- Your custom JS that uses Prototype -->
+  <script src="js/main.js"></script>
 </head>
 <body>
   <div id="page-container">
@@ -56,6 +71,7 @@ $worldConn->close();
         </form>
       </div>
     </nav>
+    
     <!-- SIDEBAR TOGGLE BUTTON -->
     <div id="sidebarToggleContainer">
       <!-- In no-JS mode, this link uses the fragment identifier to toggle the sidebar -->
@@ -87,6 +103,7 @@ $worldConn->close();
         <li><a href="https://www.wikipedia.org" target="_blank">Wikipedia</a></li>
       </ul>
     </nav>
+    
     <!-- MAIN CONTENT -->
     <div id="content-wrap">
       <div class="container mt-5">
@@ -99,10 +116,16 @@ $worldConn->close();
                 <h5 class="card-title">Rooftop Living</h5>
                 <p class="card-text">Location: Some Random Building's Rooftop</p>
                 <p class="card-text">Price: Half your kidney and 1 lung</p>
-                <a href="#" class="btn btn-primary" onclick="displayBookingInfo('Single Room')">Book Now</a>
+                <!-- Updated Book Now link with fallback query parameter -->
+                <a href="index.php?room=Single+Room#reservationFormContainer" 
+                   class="btn btn-primary" 
+                   onclick="displayBookingInfo('Single Room'); return false;">
+                  Book Now
+                </a>
               </div>
             </div>
           </div>
+          <!-- Repeat for other room cards with corresponding room type -->
           <div class="col-md-4">
             <div class="card mb-4">
               <img src="room2.jpg" class="card-img-top" alt="Double Room">
@@ -110,7 +133,11 @@ $worldConn->close();
                 <h5 class="card-title">Fancy Hobo</h5>
                 <p class="card-text">Location: Da Pool</p>
                 <p class="card-text">Price: one half eaten hot dog</p>
-                <a href="#" class="btn btn-primary" onclick="displayBookingInfo('Double Room')">Book Now</a>
+                <a href="index.php?room=Double+Room#reservationFormContainer" 
+                   class="btn btn-primary" 
+                   onclick="displayBookingInfo('Double Room'); return false;">
+                  Book Now
+                </a>
               </div>
             </div>
           </div>
@@ -121,18 +148,24 @@ $worldConn->close();
                 <h5 class="card-title">Lé Suite</h5>
                 <p class="card-text">Location: Penthouse Suite</p>
                 <p class="card-text">Price: Your soul &gt;:D</p>
-                <a href="#" class="btn btn-primary" onclick="displayBookingInfo('Suite Room')">Book Now</a>
+                <a href="index.php?room=Suite+Room#reservationFormContainer" 
+                   class="btn btn-primary" 
+                   onclick="displayBookingInfo('Suite Room'); return false;">
+                  Book Now
+                </a>
               </div>
             </div>
           </div>
         </div>
 
-        <section class="reservation-form" id="reservationFormContainer">
+        <!-- Reservation Form; pre-display if a room is selected via fallback -->
+        <section class="reservation-form" id="reservationFormContainer" style="<?php echo ($selectedRoom !== '') ? 'display:block;' : 'display:none;'; ?>">
           <h2>Book Your Room</h2>
           <form id="reservationForm" action="server.php" method="POST">
-            <div class="form-group">
+            <div class="form-group" style="position: relative;">
               <label for="name">Full Name:</label>
               <input type="text" class="form-control" id="name" name="name" placeholder="Your full name" required>
+              <div id="nameAutocomplete" class="dropdown-menu" style="display: none;"></div>
             </div>
             <div class="form-group">
               <label for="email">Email Address:</label>
@@ -142,9 +175,9 @@ $worldConn->close();
               <label for="room-type">Room Type:</label>
               <select class="form-control" id="room-type" name="room_type" required>
                 <option value="">Select a room type</option>
-                <option value="Single Room">Single Room</option>
-                <option value="Double Room">Double Room</option>
-                <option value="Suite Room">Suite Room</option>
+                <option value="Single Room" <?php if ($selectedRoom === 'Single Room') echo 'selected'; ?>>Single Room</option>
+                <option value="Double Room" <?php if ($selectedRoom === 'Double Room') echo 'selected'; ?>>Double Room</option>
+                <option value="Suite Room" <?php if ($selectedRoom === 'Suite Room') echo 'selected'; ?>>Suite Room</option>
               </select>
             </div>
             <div class="form-group">
@@ -167,6 +200,10 @@ $worldConn->close();
               <select class="form-control" id="city" name="city" required>
                 <option value="">-- Select a country first --</option>
               </select>
+              <div id="loadingBarContainer" style="display:none; margin-bottom:10px;">
+                <div id="loadingBar" style="background: green; width: 0%; height: 20px;"></div>
+                <div id="loadingTip" style="margin-top: 5px; font-size: 12px; color: #555;"></div>
+              </div>
             </div>
             <button type="submit" class="btn btn-success">Book Now</button>
           </form>
@@ -174,15 +211,42 @@ $worldConn->close();
       </div>
     </div>
   </div>
+
   <!-- FOOTER -->
   <footer class="bg-dark text-white text-center py-3">
     <p>&copy; Jimbobs Fake Mustache &amp; Hotel Emporium. No refunds.</p>
   </footer>
 
-  <!-- Include jQuery and Bootstrap JS -->
   <script src="js/jquery.min.js"></script>
+  <script>
+    // Release the $ so that Prototype’s $ remains intact
+    jQuery.noConflict();
+  </script>
   <script src="js/bootstrap.bundle.min.js"></script>
-  <!-- Link to the external JavaScript file -->
-  <script src="js/main.js"></script>
+  <!-- Reservation Confirmation Modal -->
+  <div class="modal fade" id="reservationModal" tabindex="-1" role="dialog" aria-labelledby="reservationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="reservationModalLabel">Reservation Confirmed</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Hotel Image at the top -->
+          <div id="modalHotelImage" style="text-align: center; margin-bottom: 20px;">
+            <img src="" alt="Hotel Image" style="max-width: 100%; height: auto;">
+          </div>
+          <!-- Reservation details go here -->
+          <div id="modalReservationDetails"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

@@ -3,11 +3,13 @@ $servername = "localhost";
 $username   = "root";
 $password   = "";
 
+// Create connection
 $conn = new mysqli($servername, $username, $password);
 if ($conn->connect_error) {
     die("Connection to MySQL failed: " . $conn->connect_error);
 }
 
+// Create database if it doesn't exist
 $dbSql = "CREATE DATABASE IF NOT EXISTS simpsons";
 if (!$conn->query($dbSql)) {
     die("Error creating 'simpsons' database: " . $conn->error);
@@ -15,6 +17,7 @@ if (!$conn->query($dbSql)) {
 
 $conn->select_db("simpsons");
 
+// Create the reservation table if it doesn't exist
 $tableQuery = "CREATE TABLE IF NOT EXISTS reservation (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -56,39 +59,51 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $last_id = $conn->insert_id;
         $result  = $conn->query("SELECT * FROM reservation WHERE id = $last_id");
         $reservation = $result->fetch_assoc();
-        ?>
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <title>Reservation Confirmation</title>
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <link rel="stylesheet" href="css/bootstrap.min.css">
-            <link rel="stylesheet" href="css/styles.css">
-        </head>
-        <body>
-            <div class="container mt-5">
-                <h1>Reservation Confirmed</h1>
-                <p>Thank you, <?php echo htmlspecialchars($reservation['name']); ?>, for your reservation.</p>
-                <ul>
-                    <li>Email: <?php echo htmlspecialchars($reservation['email']); ?></li>
-                    <li>Room Type: <?php echo htmlspecialchars($reservation['room_type']); ?></li>
-                    <li>Check-In Date: <?php echo htmlspecialchars($reservation['checkin']); ?></li>
-                    <li>Check-Out Date: <?php echo htmlspecialchars($reservation['checkout']); ?></li>
-                    <?php if (!empty($reservation['country_code'])) : ?>
-                        <li>Country Code: <?php echo htmlspecialchars($reservation['country_code']); ?></li>
-                    <?php endif; ?>
-                    <?php if (!empty($reservation['city'])) : ?>
-                        <li>City: <?php echo htmlspecialchars($reservation['city']); ?></li>
-                    <?php endif; ?>
-                </ul>
-                <a href="index.php" class="btn btn-primary">Make Another Reservation</a>
-            </div>
-            <script src="js/jquery.min.js"></script>
-            <script src="js/bootstrap.bundle.min.js"></script>
-        </body>
-        </html>
-        <?php
+
+        // Check if the request is made via Ajax
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            header('Content-Type: application/json');
+            echo json_encode(array(
+                "status" => "success",
+                "reservation" => $reservation
+            ));
+        } else {
+            // Normal non-Ajax request: display full HTML confirmation page
+            ?>
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <title>Reservation Confirmation</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <link rel="stylesheet" href="css/bootstrap.min.css">
+                <link rel="stylesheet" href="css/styles.css">
+            </head>
+            <body>
+                <div class="container mt-5">
+                    <h1>Reservation Confirmed</h1>
+                    <p>Thank you, <?php echo htmlspecialchars($reservation['name']); ?>, for your reservation.</p>
+                    <ul>
+                        <li>Email: <?php echo htmlspecialchars($reservation['email']); ?></li>
+                        <li>Room Type: <?php echo htmlspecialchars($reservation['room_type']); ?></li>
+                        <li>Check-In Date: <?php echo htmlspecialchars($reservation['checkin']); ?></li>
+                        <li>Check-Out Date: <?php echo htmlspecialchars($reservation['checkout']); ?></li>
+                        <?php if (!empty($reservation['country_code'])) : ?>
+                            <li>Country Code: <?php echo htmlspecialchars($reservation['country_code']); ?></li>
+                        <?php endif; ?>
+                        <?php if (!empty($reservation['city'])) : ?>
+                            <li>City: <?php echo htmlspecialchars($reservation['city']); ?></li>
+                        <?php endif; ?>
+                    </ul>
+                    <a href="index.php" class="btn btn-primary">Make Another Reservation</a>
+                </div>
+                <script src="js/jquery.min.js"></script>
+                <script src="js/bootstrap.bundle.min.js"></script>
+            </body>
+            </html>
+            <?php
+        }
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }

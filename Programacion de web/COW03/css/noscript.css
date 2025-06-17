@@ -1,0 +1,38 @@
+/* Fallback CSS for when JavaScript is disabled */
+
+/* Sidebar styling */
+#sidebar {
+    position: fixed;
+    top: 56px; /* Adjust based on your header height */
+    left: -250px;
+    width: 250px;
+    height: 100%;
+    background-color: #343a40; /* Dark background for fallback */
+    padding: 20px;
+    overflow-y: auto;
+    transition: left 0.3s ease;
+    z-index: 1000;
+  }
+  
+  /* When the sidebar is targeted (via an anchor link), slide it in */
+  #sidebar:target {
+    left: 0;
+  }
+  
+  /* Sidebar toggle link styling (fallback) */
+  #sidebarToggle {
+    display: inline-block;
+    cursor: pointer;
+  }
+  
+  /* Fallback close link styling */
+  #closeSidebar {
+    display: block;
+    margin: 10px 0;
+    padding: 5px;
+    background-color: #6c757d;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+  }
+  

@@ -44,6 +44,9 @@ html, body {
 body.active-sidebar #sidebarToggle {
   left: 270px; /* moves the button over when sidebar is open */
 }
+body.active-sidebar {
+  margin-left: 250px;
+}
 
 /* SIDEBAR */
 #sidebar {
@@ -60,21 +63,6 @@ body.active-sidebar #sidebarToggle {
 }
 #sidebar.active {
   left: 0;
-}
-
-/* If the body has .active-sidebar, we shift main content, etc. */
-body.active-sidebar {
-  margin-left: 250px;
-}
-/* Fallback close link styling */
-#closeSidebar {
-  display: block;
-  margin: 10px;
-  padding: 5px;
-  background: #6c757d;
-  color: #fff;
-  text-decoration: none;
-  text-align: center;
 }
 #sidebar ul {
   list-style: none;
@@ -125,6 +113,13 @@ body.active-sidebar {
 #sidebar button[type="submit"]:hover {
   background-color: #246bb1;
 }
+
+/* Hide fallback close link when JavaScript is enabled */
+.js-enabled #closeSidebar {
+  display: none !important;
+}
+
+
 
 /* NAVBAR */
 header {
@@ -181,34 +176,4 @@ header {
   transition: background-color 0.3s ease;
 }
 
-/* NO-JS FALLBACK STYLES */
-/* These rules ensure the sidebar works even if JavaScript fails to load */
-#sidebar:target {
-  left: 0;
-  /* Adjusted background for no-JS mode */
-  background-color: #343a40;
-  overflow-y: auto;
-  z-index: 1000;
-}
-
-/* Ensure the sidebar toggle is styled as a link in no-JS mode */
-#sidebarToggle {
-  display: inline-block;
-  cursor: pointer;
-}
-
-/* Styling for the fallback close link within the sidebar */
-#closeSidebar {
-  display: block;
-  margin: 10px;
-  padding: 5px;
-  background: #6c757d;
-  color: #fff;
-  text-decoration: none;
-  text-align: center;
-}
-
-.js-enabled #closeSidebar {
-  display: none;
-}
-
+/* Additional custom styles can go here */
